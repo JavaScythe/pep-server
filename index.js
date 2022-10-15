@@ -1,10 +1,12 @@
+let startTime = new Date().getTime();
 const app = require("express")();
 const config = require("./config.js");
 const api = require("./api.js");
-api.init(config);
-app.use("/api/v0/:method", (req, res, next) => {
-	res.send(req.params.method);
-	console.log(api.consume(req.params.method, req.query));
+console.log(`Loaded ${api.init(config)} games in ${new Date().getTime()-startTime}ms`);
+app.use("/api/:method", (req, res, next) => {
+	let d = api.consume(req.params.method, req.query);
+	res.type('json');
+	res.send(d);
 });
 app.get("/", (req, res) => {
 	res.send("l bozo");
